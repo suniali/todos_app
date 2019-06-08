@@ -111,3 +111,26 @@ describe('Delete / todos', () => {
             .end(done);
     });
 });
+
+describe('Update / todos', () => {
+    it('test should update note', (done) => {
+        var note = "This This THis";
+        var age = 44;
+        request(app)
+            .patch('/update/' + testNote[0]._id.toHexString())
+            .send({ note, age })
+            .expect(200)
+            .expect((res) => {
+                expect(res.body._id).toBe(testNote[0]._id.toHexString());
+            })
+            .end(done);
+    });
+
+    it('test should not update note', (done) => {
+        request(app)
+            .patch('/update/123')
+            .send({})
+            .expect(400)
+            .end(done);
+    });
+});
