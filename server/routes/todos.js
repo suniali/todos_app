@@ -1,6 +1,7 @@
 const express = require('express');
 const Note = require('../model/todo');
 const { ObjectID } = require('mongodb');
+const _ = require('loadsh');
 
 const routes = express.Router();
 
@@ -66,6 +67,24 @@ routes.delete('/deleteByID/:id', async (req, res) => {
     } else {
         res.statusCode = 500;
         res.json({ 'err_msg': 'ID is not valid in database.' });
+    }
+});
+
+routes.patch('/update/:id', async (req, res) => {
+    var id = req.params.id;
+    var body = _.pick(req.body, ['note', 'age']);
+
+    if (ObjectID.isValid(id)) {
+        try {
+            var updateNote=await Note.findByIdAndUpdate(id,{$set:body});
+            res.json(updateNote);
+        } catch (e) {
+            res.statusCode = 500;
+            res.json({ 'err_msg': 'Unable to Update Note!' });
+        }
+    } else {
+        res.statusCode = 400;
+        res.json({ 'err_msg': 'Unable valid ID in data server.' });
     }
 });
 
