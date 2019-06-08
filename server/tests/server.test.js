@@ -99,7 +99,7 @@ describe('Delete / todos', () => {
             .delete('/deleteByID/' + testNote[0]._id.toHexString())
             .expect(200)
             .expect((res) => {
-                expect(res.body._id).toBe(testNote[0]._id.toHexString());
+                expect(res.body.deletedCount).toBe(1);
             })
             .end(done);
     });
@@ -121,7 +121,7 @@ describe('Update / todos', () => {
             .send({ note, age })
             .expect(200)
             .expect((res) => {
-                expect(res.body._id).toBe(testNote[0]._id.toHexString());
+                expect(res.body.nModified).toBe(1);
             })
             .end(done);
     });
