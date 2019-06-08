@@ -1,5 +1,5 @@
 const express = require('express');
-const Post = require('../model/todo');
+const Note = require('../model/todo');
 const { ObjectID } = require('mongodb');
 
 const routes = express.Router();
@@ -8,20 +8,10 @@ routes.get('/', (req, res) => {
     res.send("Wellcome to Mongoose World.");
 });
 
-routes.get('/find', async (req, res) => {
-    try {
-        const notes = await Post.find();
-        res.json(notes);
-    } catch (err) {
-        console.log(err);
-        res.json({ err_msg: err });
-    }
-});
-
 routes.post('/', async (req, res) => {
     // console.log(req.body);
 
-    var note = new Post({
+    var note = new Note({
         note: req.body.note,
         pr: req.body.pr,
         description: req.body.description,
@@ -38,12 +28,41 @@ routes.post('/', async (req, res) => {
     }
 });
 
+routes.get('/find', async (req, res) => {
+    try {
+        const notes = await Note.find();
+        res.json(notes);
+    } catch (err) {
+        console.log(err);
+        res.json({ err_msg: err });
+    }
+});
+
+
 routes.post('/find', async (req, res) => {
     if (ObjectID.isValid(req.body.id)) {
         try {
-            var note = await Post.findById(req.body.id);
+            var note = await Note.findById(req.body.id);
             res.json(note);
         } catch (err) { console.log(e); };
+    } else {
+        res.statusCode = 500;
+        res.json({ 'err_msg': 'ID is not valid in database.' });
+    }
+});
+
+routes.delete('/deleteByID/:id', async (req, res) => {
+    var id = req.params.id;
+    // console.log(id);
+
+    if (ObjectID.isValid(id)) {
+        try {
+            var deleteNote = await Note.findOneAndDelete({ _id: id });
+            res.json(deleteNote);
+        } catch (e) {
+            res.statusCode = 600;
+            res.send({ 'err_msg': 'Handle error.' });
+        }
     } else {
         res.statusCode = 500;
         res.json({ 'err_msg': 'ID is not valid in database.' });

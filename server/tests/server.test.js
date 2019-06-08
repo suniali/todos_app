@@ -1,17 +1,20 @@
 const expect = require('expect');
 const request = require('supertest');
+const { ObjectID } = require('mongodb');
 
 const { app } = require('../mongoose_connect');
 const todo = require('../model/todo');
 
 const testNote = [{
+    _id: new ObjectID(),
     note: 'First Note For My Best Friend Amin.',
     age: 37,
-    tell: '12345678910'
+    tell: '12345678910',
 }, {
+    _id: new ObjectID(),
     note: 'Second Note For My Best Friend Amin.',
     age: 22,
-    tell: '12345678910'
+    tell: '12345678910',
 }];
 
 beforeEach((done) => {
@@ -21,7 +24,7 @@ beforeEach((done) => {
 });
 
 describe('Post / Todos', () => {
-    it('test create New Todo', (done) => {
+    it('test should create New Todo', (done) => {
         var note = "First Note For My best Friend Amin.";
         var age = 37;
         var tell = "12345678910";
@@ -72,7 +75,39 @@ describe('Get / todos', () => {
             .expect(200)
             .expect((res) => {
                 expect(res.body.length).toBe(2);
-                expect(res.body).toMatchObject(testNote);
+                expect(res.body[0]._id).toBe(testNote[0]._id.toHexString());
+                expect(res.body[1]._id).toBe(testNote[1]._id.toHexString());
+
             }).end(done);
+    });
+    it('test should get id and return Note', (done) => {
+        request(app)
+            .post('/find')
+            .send({ id: testNote[0]._id.toHexString() })
+            .expect(200)
+            .expect((res) => {
+                expect(res.body._id).toBe(testNote[0]._id.toHexString());
+            })
+            .end(done);
+
+    });
+});
+
+describe('Delete / todos', () => {
+    it('test should delete remove note', (done) => {
+        request(app)
+            .delete('/deleteByID/' + testNote[0]._id.toHexString())
+            .expect(200)
+            .expect((res) => {
+                expect(res.body._id).toBe(testNote[0]._id.toHexString());
+            })
+            .end(done);
+    });
+
+    it('test should not remove note', (done) => {
+        request(app)
+            .delete('/deleteByID/123')
+            .expect(500)
+            .end(done);
     });
 });
