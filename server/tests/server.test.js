@@ -3,7 +3,7 @@ const request = require('supertest');
 const { ObjectID } = require('mongodb');
 
 const { app } = require('../mongoose_connect');
-const todo = require('../model/note');
+const Note = require('../model/note');
 
 const testNote = [{
     _id: new ObjectID(),
@@ -18,8 +18,8 @@ const testNote = [{
 }];
 
 beforeEach((done) => {
-    todo.remove({}).then(() =>
-        todo.insertMany(testNote).then(() => done())
+    Note.remove({}).then(() =>
+        Note.insertMany(testNote).then(() => done())
     ).catch((e) => done(e));
 });
 
@@ -40,7 +40,7 @@ describe('Post / Todos', () => {
                 if (err) {
                     return done(err);
                 }
-                todo.find({ note }).then((res) => {
+                Note.find({ note }).then((res) => {
                     expect(res.length).toBe(1);
                     expect(res[0]).toMatchObject({ note });
                     done();
@@ -60,7 +60,7 @@ describe('Post / Todos', () => {
                 if (err) {
                     return done(err);
                 }
-                todo.find().then((res) => {
+                Note.find().then((res) => {
                     expect(res.length).toBe(2);
                     done();
                 }).catch((e) => done(e));
