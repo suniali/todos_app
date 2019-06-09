@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-var schema = mongoose.Schema({
+var noteSchema = mongoose.Schema({
     note: {
         type: String,
         require: true,
@@ -13,25 +13,25 @@ var schema = mongoose.Schema({
         trim: true,
         // default: null
     },
-    age:{
-        type:Number,
-        require:true,
+    age: {
+        type: Number,
+        require: true,
         // default:100
     },
     tell: {
         type: String,
         require: true,
         trim: true,
-        minlength:11,
-        maxlength:12,
+        minlength: 11,
+        maxlength: 12,
     },
     description: {
         type: String,
         require: false,
         trim: true,
-        // default: null
+        // default: null 
     }
 });
 
-module.exports = mongoose.model('todo', schema);
+module.exports = mongoose.model('notes', noteSchema);
 

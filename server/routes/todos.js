@@ -1,5 +1,5 @@
 const express = require('express');
-const Note = require('../model/todo');
+const Note = require('../model/note');
 const { ObjectID } = require('mongodb');
 const _ = require('loadsh');
 
@@ -58,7 +58,7 @@ routes.delete('/deleteByID/:id', async (req, res) => {
 
     if (ObjectID.isValid(id)) {
         try {
-            var deleteNote = await Note.findOneAndDelete({ _id: id });
+            var deleteNote = await Note.deleteOne({ _id: id });
             res.json(deleteNote);
         } catch (e) {
             res.statusCode = 600;
@@ -76,7 +76,7 @@ routes.patch('/update/:id', async (req, res) => {
 
     if (ObjectID.isValid(id)) {
         try {
-            var updateNote=await Note.findByIdAndUpdate(id,{$set:body});
+            var updateNote = await Note.updateOne({ _id: id }, { note: body.note, age: body.age });
             res.json(updateNote);
         } catch (e) {
             res.statusCode = 500;

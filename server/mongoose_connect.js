@@ -1,15 +1,16 @@
 const mongoose = require('mongoose');
 const express = require('express');
 require('dotenv/config');
-const Post = require('./model/todo');
-const postRoute = require('./routes/todos');
+const NoteRoute = require('./routes/todos');
 const parser = require('body-parser');
+// const UserRoute=require('./routes/users');
 
 const app = express();
 const port = process.env.port || 3000;
 
 app.use(parser.json());
-app.use('/', postRoute);
+app.use('/', NoteRoute);
+// app.use('/',UserRoute);
 
 
 

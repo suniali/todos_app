@@ -3,7 +3,7 @@ const request = require('supertest');
 const { ObjectID } = require('mongodb');
 
 const { app } = require('../mongoose_connect');
-const todo = require('../model/todo');
+const todo = require('../model/note');
 
 const testNote = [{
     _id: new ObjectID(),
@@ -99,7 +99,7 @@ describe('Delete / todos', () => {
             .delete('/deleteByID/' + testNote[0]._id.toHexString())
             .expect(200)
             .expect((res) => {
-                expect(res.body._id).toBe(testNote[0]._id.toHexString());
+                expect(res.body.deletedCount).toBe(1);
             })
             .end(done);
     });
@@ -108,6 +108,29 @@ describe('Delete / todos', () => {
         request(app)
             .delete('/deleteByID/123')
             .expect(500)
+            .end(done);
+    });
+});
+
+describe('Update / todos', () => {
+    it('test should update note', (done) => {
+        var note = "This This THis";
+        var age = 44;
+        request(app)
+            .patch('/update/' + testNote[0]._id.toHexString())
+            .send({ note, age })
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.nModified).toBe(1);
+            })
+            .end(done);
+    });
+
+    it('test should not update note', (done) => {
+        request(app)
+            .patch('/update/123')
+            .send({})
+            .expect(400)
             .end(done);
     });
 });
