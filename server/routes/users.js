@@ -2,9 +2,9 @@ const express = require('express');
 const User = require('../model/user');
 const _ = require('loadsh');
 
-const routes = express.Router();
+const userRoutes = express.Router();
 
-routes.post('/users', async (req, res) => {
+userRoutes.post('/user', async (req, res) => {
     var body = _.pick(req.body, ['email', 'password']);
     var user = new User(body);
 
@@ -19,4 +19,4 @@ routes.post('/users', async (req, res) => {
 
 
 
-module.exports = routes;
+module.exports = userRoutes;

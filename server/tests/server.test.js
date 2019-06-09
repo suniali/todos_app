@@ -18,7 +18,7 @@ const testNote = [{
 }];
 
 beforeEach((done) => {
-    Note.remove({}).then(() =>
+    Note.deleteMany({}).then(() =>
         Note.insertMany(testNote).then(() => done())
     ).catch((e) => done(e));
 });

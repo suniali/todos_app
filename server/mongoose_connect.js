@@ -3,15 +3,13 @@ const express = require('express');
 require('dotenv/config');
 const NoteRoute = require('./routes/note');
 const parser = require('body-parser');
-// const UserRoute=require('./routes/users');
+const UserRoute = require('./routes/users');
 
 const app = express();
 const port = process.env.port || 3000;
 
 app.use(parser.json());
-app.use('/', NoteRoute);
-// app.use('/',UserRoute);
-
+app.use('/', [NoteRoute, UserRoute]);
 
 
 mongoose.connect(process.env.DB_CONNECT, { useNewUrlParser: true }).then(() => {
