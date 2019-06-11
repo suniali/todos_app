@@ -145,6 +145,13 @@ describe('Post /user', () => {
             .end(done);
     });
 
+    it('test should not add a user and err 401', (done) => {
+        request(app)
+            .post('/user')
+            .expect(500)
+            .end(done);
+    });
+
 });
 
 describe('Get /user/me', () => {
