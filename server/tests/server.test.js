@@ -4,6 +4,7 @@ const { ObjectID } = require('mongodb');
 
 const { app } = require('../mongoose_connect');
 const Note = require('../model/note');
+const User = require('../model/user');
 
 const testNote = [{
     _id: new ObjectID(),
@@ -18,9 +19,13 @@ const testNote = [{
 }];
 
 beforeEach((done) => {
-    Note.deleteMany({}).then(() =>
-        Note.insertMany(testNote).then(() => done())
-    ).catch((e) => done(e));
+    Note.insertMany(testNote).then(() =>
+        done()).catch((e) =>
+            done(e));
+
+});
+afterEach((done) => {
+    Note.remove({}).then(() => done()).catch((err) => done(err));
 });
 
 describe('Post / Todos', () => {
