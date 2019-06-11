@@ -1,19 +1,19 @@
 const expect = require('expect');
 const request = require('supertest');
-
+const jwt = require('jsonwebtoken');
 
 const { app } = require('../mongoose_connect');
 const Note = require('../model/note');
-
+const User = require('../model/user').User;
 
 const { removeNotes, insertNotes, testNote } = require('./seed/seed_note');
-
+const { testUser, removeUsers, insertUsers } = require('./seed/seed_user');
 
 beforeEach(insertNotes);
-
+beforeEach(insertUsers);
 
 afterEach(removeNotes);
-
+afterEach(removeUsers);
 
 describe('Post / Todos', () => {
     it('test should create New Todo', (done) => {
@@ -123,6 +123,25 @@ describe('Update / todos', () => {
             .patch('/update/123')
             .send({})
             .expect(400)
+            .end(done);
+    });
+});
+
+describe('Post / User', () => {
+    it('test should add a user in database.', (done) => {
+        request(app)
+            .post('/user')
+            .send({
+                _id: testUser[0]._id.toHexString(),
+                email: "Amin" + testUser[0].email,
+                password: testUser[0].password
+            })
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.email).toBe("Amin" + testUser[0].email);
+                var hash = jwt.verify(res.header['jarvis-auth'], 'I Love Amin');
+                expect(hash._id).toBe(res.body._id);
+            })
             .end(done);
     });
 });
