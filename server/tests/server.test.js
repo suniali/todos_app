@@ -166,4 +166,12 @@ describe('Get /user/me', () => {
             })
             .end(done);
     });
+    it('test should not get user and check tokens', (done) => {
+        request(app)
+            .get('/user/me')
+            .expect(401)
+            .expect((res) => {
+                expect(res.body).toEqual({});
+            }).end(done);
+    });
 });
