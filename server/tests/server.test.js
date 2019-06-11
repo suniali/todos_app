@@ -151,6 +151,7 @@ describe('Post / User', () => {
         .expect(200)
         .expect((res)=>{
             expect(res.body._id).toBe(testUser[0]._id.toHexString());
+            expect(res.body.email).toBe(testUser[0].email);
         })
         .end(done);
     });
