@@ -1,7 +1,7 @@
 const express = require('express');
 const { User } = require('../model/user');
 const _ = require('loadsh');
-const {authenticate} = require('../middlewarer/authenticate');
+const { authenticate } = require('../middlewarer/authenticate');
 
 const userRoutes = express.Router();
 
@@ -19,8 +19,18 @@ userRoutes.post('/user', async (req, res) => {
     }
 });
 
-userRoutes.get('/user/me', authenticate ,(req, res) => {
+userRoutes.get('/user/me', authenticate, (req, res) => {
     res.send(req.user);
+});
+
+userRoutes.post('/user/login', (req, res) => {
+    var body = _.pick(req.body, ['email', 'password']);
+    User.findByCredential(body.email, body.password).then((user) => {
+        res.send(user);
+    }).catch((err) => {
+        res.statusCode = 400;
+        res.send();
+    });
 });
 
 
