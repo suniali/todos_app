@@ -1,32 +1,19 @@
 const expect = require('expect');
 const request = require('supertest');
-const { ObjectID } = require('mongodb');
+
 
 const { app } = require('../mongoose_connect');
 const Note = require('../model/note');
-const User = require('../model/user');
 
-const testNote = [{
-    _id: new ObjectID(),
-    note: 'First Note For My Best Friend Amin.',
-    age: 37,
-    tell: '12345678910',
-}, {
-    _id: new ObjectID(),
-    note: 'Second Note For My Best Friend Amin.',
-    age: 22,
-    tell: '12345678910',
-}];
 
-beforeEach((done) => {
-    Note.insertMany(testNote).then(() =>
-        done()).catch((e) =>
-            done(e));
+const { removeNotes, insertNotes, testNote } = require('./seed/seed_note');
 
-});
-afterEach((done) => {
-    Note.remove({}).then(() => done()).catch((err) => done(err));
-});
+
+beforeEach(insertNotes);
+
+
+afterEach(removeNotes);
+
 
 describe('Post / Todos', () => {
     it('test should create New Todo', (done) => {
