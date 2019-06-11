@@ -52,7 +52,7 @@ userSchema.methods.generateAuthToken = function () {
 userSchema.statics.findByToken = function (token) {
     var User = this;
     var decoded;
-    console.log('Top of try Catch decoder');
+    // console.log('Top of try Catch decoder');
 
     try {
         decoded = jwt.verify(token, 'I Love Amin');
@@ -70,12 +70,10 @@ userSchema.statics.findByToken = function (token) {
 };
 userSchema.statics.findByCredential = function (email, password) {
     var User = this;
-
     return User.find({ email }).then((user) => {
         if (!user) {
             return Promise.reject();
         }
-        // console.log("Password : ",password);
         return new Promise((resolve, reject) => {
             bcrypt.compare(password, user[0].password, (err, success) => {
                 if (success) {

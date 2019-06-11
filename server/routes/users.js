@@ -25,6 +25,8 @@ userRoutes.get('/user/me', authenticate, (req, res) => {
 
 userRoutes.post('/user/login', (req, res) => {
     var body = _.pick(req.body, ['email', 'password']);
+    // console.log("email : ", body.email);
+    // console.log("password : ", body.password);
     User.findByCredential(body.email, body.password).then((user) => {
         res.send(user);
     }).catch((err) => {

@@ -4,16 +4,15 @@ const jwt = require('jsonwebtoken');
 
 const { app } = require('../mongoose_connect');
 const Note = require('../model/note');
-const User = require('../model/user').User;
 
 const { removeNotes, insertNotes, testNote } = require('./seed/seed_note');
 const { testUser, removeUsers, insertUsers } = require('./seed/seed_user');
 
+beforeEach(removeNotes);
+beforeEach(removeUsers);
 beforeEach(insertNotes);
 beforeEach(insertUsers);
 
-afterEach(removeNotes);
-afterEach(removeUsers);
 
 describe('Post / Todos', () => {
     it('test should create New Todo', (done) => {
@@ -173,5 +172,33 @@ describe('Get /user/me', () => {
             .expect((res) => {
                 expect(res.body).toEqual({});
             }).end(done);
+    });
+});
+
+describe('Login', () => {
+    it('test login user.', (done) => {
+        var email = "Amin" + testUser[0].email;
+        var password = testUser[0].password;
+        request(app)
+            .post('/user')
+            .send({ email, password })
+            .expect(200)
+            .end((err) => {
+                if (err) {
+                    done(err);
+                }
+                request(app)
+                    .post('/user/login')
+                    .send({ email, password })
+                    .expect(200)
+                    .end(done);
+
+            });
+    });
+    it('test should not login user.', (done) => {
+        request(app)
+            .post('/user/login')
+            .expect(400)
+            .end(done);
     });
 });
