@@ -127,7 +127,7 @@ describe('Update / todos', () => {
     });
 });
 
-describe('Post / User', () => {
+describe('Post /user', () => {
     it('test should add a user in database.', (done) => {
         request(app)
             .post('/user')
@@ -144,15 +144,19 @@ describe('Post / User', () => {
             })
             .end(done);
     });
-    it('test should get user and check tokens',(done)=>{
+
+});
+
+describe('Get /user/me', () => {
+    it('test should get user and check tokens', (done) => {
         request(app)
-        .get('/user/me')
-        .set('jarvis-auth',testUser[0].tokens[0].token)
-        .expect(200)
-        .expect((res)=>{
-            expect(res.body._id).toBe(testUser[0]._id.toHexString());
-            expect(res.body.email).toBe(testUser[0].email);
-        })
-        .end(done);
+            .get('/user/me')
+            .set('jarvis-auth', testUser[0].tokens[0].token)
+            .expect(200)
+            .expect((res) => {
+                expect(res.body._id).toBe(testUser[0]._id.toHexString());
+                expect(res.body.email).toBe(testUser[0].email);
+            })
+            .end(done);
     });
 });
