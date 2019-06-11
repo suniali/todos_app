@@ -144,4 +144,14 @@ describe('Post / User', () => {
             })
             .end(done);
     });
+    it('test should get user and check tokens',(done)=>{
+        request(app)
+        .get('/user/me')
+        .set('jarvis-auth',testUser[0].tokens[0].token)
+        .expect(200)
+        .expect((res)=>{
+            expect(res.body._id).toBe(testUser[0]._id.toHexString());
+        })
+        .end(done);
+    });
 });
