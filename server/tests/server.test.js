@@ -82,14 +82,32 @@ describe('Get / todos', () => {
             });
     });
     it('test should get id and return Note', (done) => {
+        var note = testNote[0].note;
+        var age = testNote[0].age;
+        var tell = testNote[0].tell;
         request(app)
-            .post('/find')
-            .send({ id: testNote[0]._id.toHexString() })
+            .post('/')
+            .set('jarvis-auth', testUser[0].tokens[0].token)
+            .send({ note, age, tell })
             .expect(200)
-            .expect((res) => {
-                expect(res.body._id).toBe(testNote[0]._id.toHexString());
-            })
-            .end(done);
+            .end((err, res) => {
+                if (err) {
+                    return done(err);
+                }
+
+                request(app)
+                    .post('/find')
+                    .set('jarvis-auth', testUser[0].tokens[0].token)
+                    .send({ id: res.body._id })
+                    .expect(200)
+                    .expect((result) => {
+                        if (err) {
+                            return done(e);
+                        }
+                        expect(result.body._id).toBe(res.body._id);
+                    })
+                    .end(done);
+            });
 
     });
 });

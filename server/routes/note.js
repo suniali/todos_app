@@ -43,10 +43,12 @@ routes.get('/find', authenticate, async (req, res) => {
 });
 
 
-routes.post('/find', async (req, res) => {
+routes.post('/find', authenticate, async (req, res) => {
+    console.log("ID:",req.body.id);
+    
     if (ObjectID.isValid(req.body.id)) {
         try {
-            var note = await Note.findById(req.body.id);
+            var note = await Note.findOne({ _id: req.body.id, _creator: req.user._id });
             res.json(note);
         } catch (err) { console.log(e); };
     } else {

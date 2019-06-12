@@ -15,8 +15,12 @@ const testUser = [{
     }]
 }, {
     _id: userTwoID,
-    email:'ILoveAmin@gmail.com',
+    email: 'ILoveAmin@gmail.com',
     password: 'Amin I Love you',
+    tokens: [{
+        access: 'auth',
+        token: jwt.sign({ _id: userTwoID, access: 'auth' }, 'I Love Amin').toString()
+    }]
 }];
 
 const removeUsers = (done) => {
