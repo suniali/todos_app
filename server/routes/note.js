@@ -44,8 +44,8 @@ routes.get('/find', authenticate, async (req, res) => {
 
 
 routes.post('/find', authenticate, async (req, res) => {
-    console.log("ID:",req.body.id);
-    
+    console.log("ID:", req.body.id);
+
     if (ObjectID.isValid(req.body.id)) {
         try {
             var note = await Note.findOne({ _id: req.body.id, _creator: req.user._id });
@@ -57,13 +57,13 @@ routes.post('/find', authenticate, async (req, res) => {
     }
 });
 
-routes.delete('/deleteByID/:id', async (req, res) => {
+routes.delete('/deleteByID/:id', authenticate, async (req, res) => {
     var id = req.params.id;
     // console.log(id);
 
     if (ObjectID.isValid(id)) {
         try {
-            var deleteNote = await Note.deleteOne({ _id: id });
+            var deleteNote = await Note.deleteOne({ _id: id, _creator: req.user._id });
             res.json(deleteNote);
         } catch (e) {
             res.statusCode = 600;

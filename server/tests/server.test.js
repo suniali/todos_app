@@ -121,18 +121,34 @@ describe('Get / todos', () => {
 
 describe('Delete / todos', () => {
     it('test should delete remove note', (done) => {
+        var note = testNote[0].note;
+        var age = testNote[0].age;
+        var tell = testNote[0].tell;
+
         request(app)
-            .delete('/deleteByID/' + testNote[0]._id.toHexString())
+            .post('/')
+            .send({ note, age, tell })
+            .set('jarvis-auth', testUser[0].tokens[0].token)
             .expect(200)
-            .expect((res) => {
-                expect(res.body.deletedCount).toBe(1);
-            })
-            .end(done);
+        .end((error, result) => {
+            if (error) {
+                return done(error);
+            }
+            request(app)
+                .delete('/deleteByID/' + result.body._id)
+                .set('jarvis-auth', testUser[0].tokens[0].token)
+                .expect(200)
+                .expect((res) => {
+                    // expect(res.body.deletedCount).toBe(1);
+                })
+                .end(done);
+        });
     });
 
     it('test should not remove note', (done) => {
         request(app)
             .delete('/deleteByID/123')
+            .set('jarvis-auth', testUser[0].tokens[0].token)
             .expect(500)
             .end(done);
     });
