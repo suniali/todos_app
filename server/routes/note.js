@@ -3,13 +3,15 @@ const Note = require('../model/note');
 const { ObjectID } = require('mongodb');
 const _ = require('loadsh');
 
+const { authenticate } = require('../middlewarer/authenticate');
+
 const routes = express.Router();
 
 routes.get('/', (req, res) => {
     res.send("Wellcome to Mongoose World.");
 });
 
-routes.post('/', async (req, res) => {
+routes.post('/', authenticate, async (req, res) => {
     // console.log(req.body);
 
     var note = new Note({
@@ -17,7 +19,8 @@ routes.post('/', async (req, res) => {
         pr: req.body.pr,
         description: req.body.description,
         tell: req.body.tell,
-        age: req.body.age
+        age: req.body.age,
+        _creator: req.user._id
     });
 
     try {
@@ -29,9 +32,9 @@ routes.post('/', async (req, res) => {
     }
 });
 
-routes.get('/find', async (req, res) => {
+routes.get('/find', authenticate, async (req, res) => {
     try {
-        const notes = await Note.find();
+        const notes = await Note.find({ _creator: req.user._id });
         res.json(notes);
     } catch (err) {
         console.log(err);

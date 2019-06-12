@@ -30,6 +30,10 @@ var noteSchema = new mongoose.Schema({
         require: false,
         trim: true,
         // default: null 
+    },
+    _creator: {
+        type: mongoose.Schema.Types.ObjectId,
+        require: true
     }
 });
 

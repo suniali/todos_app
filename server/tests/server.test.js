@@ -22,6 +22,7 @@ describe('Post / Todos', () => {
 
         request(app)
             .post('/')
+            .set('jarvis-auth', testUser[0].tokens[0].token)
             .send({ note: note, age: age, tell: tell })
             .expect(200)
             .expect((res) => {
@@ -45,6 +46,7 @@ describe('Post / Todos', () => {
         var tell = "123456";
         request(app)
             .post('/')
+            .set('jarvis-auth', testUser[0].tokens[0].token)
             .send({ note, age, tell })
             .expect(400)
             .end((err, res) => {
@@ -61,15 +63,23 @@ describe('Post / Todos', () => {
 
 describe('Get / todos', () => {
     it('test get all notes', (done) => {
+        var note = testNote[0].note;
+        var age = testNote[0].age;
+        var tell = testNote[0].tell;
         request(app)
-            .get('/find')
+            .post('/')
+            .set('jarvis-auth', testUser[0].tokens[0].token)
+            .send({ note, age, tell })
             .expect(200)
-            .expect((res) => {
-                expect(res.body.length).toBe(2);
-                expect(res.body[0]._id).toBe(testNote[0]._id.toHexString());
-                expect(res.body[1]._id).toBe(testNote[1]._id.toHexString());
-
-            }).end(done);
+            .end((err, res) => {
+                request(app)
+                    .get('/find')
+                    .set('jarvis-auth', testUser[0].tokens[0].token)
+                    .expect(200)
+                    .expect((result) => {
+                        expect(result.body.length).toBe(1);
+                    }).end(done);
+            });
     });
     it('test should get id and return Note', (done) => {
         request(app)
@@ -144,12 +154,12 @@ describe('Post /user', () => {
             .end(done);
     });
 
-    it('test should not add a user and err 401', (done) => {
-        request(app)
-            .post('/user')
-            .expect(500)
-            .end(done);
-    });
+    // it('test should not add a user and err 401', (done) => {
+    //     request(app)
+    //         .post('/user') 
+    //         .expect(500)
+    //         .end(done);
+    // });
 
 });
 
