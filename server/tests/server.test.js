@@ -202,3 +202,28 @@ describe('Login', () => {
             .end(done);
     });
 });
+
+describe('Delete /user/me/token', () => {
+    it('test should remove token and logout user.', (done) => {
+        request(app)
+            .delete('/user/me/token')
+            .set('jarvis-auth', testUser[0].tokens[0].token)
+            .expect(200)
+            .end((err, res) => {
+                if (err) {
+                    return done(err);
+                }
+                User.User.findById(testUser[0]._id).then((user) => {
+                    expect(user.tokens.length).toBe(0);
+                    done();
+                }).catch((e) => done(e));
+            });
+    });
+    it('test should not send token and do not remove any token', (done) => {
+        request(app)
+            .delete('/user/me/token')
+            .set('jarvis-auth', "")
+            .expect(401)
+            .end(done);
+    });
+});
