@@ -110,6 +110,13 @@ describe('Get / todos', () => {
             });
 
     });
+    it('test should get id and NOT return Note', (done) => {
+        request(app)
+            .post('/find')
+            .send({ id: testNote[0]._id })
+            .expect(401)
+            .end(done);
+    });
 });
 
 describe('Delete / todos', () => {
