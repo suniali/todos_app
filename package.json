@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server/mongoose_connect.js",
+    "start": "node server/server.js",
     "test": "mocha server/**/*.test.js",
     "w_test": "nodemon --exec \"npm test\""
   },

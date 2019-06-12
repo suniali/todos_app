@@ -1,6 +1,7 @@
-const mongoose = require('mongoose');
+require('./config/config');
 const express = require('express');
 require('dotenv/config');
+const { mongoose } = require('./db/mongoose');
 const NoteRoute = require('./routes/note');
 const parser = require('body-parser');
 const UserRoute = require('./routes/users');
@@ -12,11 +13,6 @@ app.use(parser.json());
 app.use('/', [NoteRoute, UserRoute]);
 
 
-mongoose.connect(process.env.DB_CONNECT, { useNewUrlParser: true }).then(() => {
-    console.log('Connected to Todos Database SuccessFull BY MONGOOSE.');
-}).catch((err) => {
-    console.log(err);
-})
 
 
 app.listen(port, () => {

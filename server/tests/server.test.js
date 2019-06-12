@@ -2,7 +2,7 @@ const expect = require('expect');
 const request = require('supertest');
 const jwt = require('jsonwebtoken');
 
-const { app } = require('../mongoose_connect');
+const { app } = require('../server');
 const Note = require('../model/note');
 
 const { removeNotes, insertNotes, testNote } = require('./seed/seed_note');
