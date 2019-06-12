@@ -21,11 +21,16 @@ const testUser = [{
 }];
 
 const removeUsers = (done) => {
-    User.User.remove({}).then(() => done()).catch((err) => done(err));
+    User.User.deleteMany({
+        email: {
+            $in: [testUser[0].email, testUser[1].email, "Aminali@gmail.com"]
+        }
+    })
+        .then(() => done()).catch((err) => done(err));
 };
 
 const insertUsers = (done) => {
     User.User.insertMany(testUser).then(() => done()).catch((err) => done(err));
 };
 
-module.exports = { testUser, removeUsers, insertUsers };
+module.exports = { testUser, removeUsers, insertUsers, User };

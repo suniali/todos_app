@@ -6,7 +6,7 @@ const { app } = require('../mongoose_connect');
 const Note = require('../model/note');
 
 const { removeNotes, insertNotes, testNote } = require('./seed/seed_note');
-const { testUser, removeUsers, insertUsers } = require('./seed/seed_user');
+const { testUser, removeUsers, insertUsers, User } = require('./seed/seed_user');
 
 beforeEach(removeNotes);
 beforeEach(removeUsers);
@@ -185,7 +185,7 @@ describe('Login', () => {
             .expect(200)
             .end((err) => {
                 if (err) {
-                    done(err);
+                    return done(err);
                 }
                 request(app)
                     .post('/user/login')
