@@ -130,19 +130,20 @@ describe('Delete / todos', () => {
             .send({ note, age, tell })
             .set('jarvis-auth', testUser[0].tokens[0].token)
             .expect(200)
-        .end((error, result) => {
-            if (error) {
-                return done(error);
-            }
-            request(app)
-                .delete('/deleteByID/' + result.body._id)
-                .set('jarvis-auth', testUser[0].tokens[0].token)
-                .expect(200)
-                .expect((res) => {
-                    // expect(res.body.deletedCount).toBe(1);
-                })
-                .end(done);
-        });
+            .end((error, result) => {
+                if (error) {
+                    return done(error);
+                }
+                request(app)
+                    .delete('/deleteByID/' + result.body._id)
+                    .set('jarvis-auth', testUser[0].tokens[0].token)
+                    .expect(200)
+                    .expect((res) => {
+                        expect(res.body.deletedCount).toBeTruthy();
+                        expect(res.body.deletedCount).toBe(1);
+                    })
+                    .end(done);
+            });
     });
 
     it('test should not remove note', (done) => {
